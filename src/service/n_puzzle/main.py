@@ -26,12 +26,14 @@ def generate_goal_sum(my_list:list):
 
     return sum
 
-def generate_final_state(my_list, mod):
-    print(mod)
+def generate_final_state(my_list):
+    mod:int = generate_goal_sum(my_list)
     if(mod % 2 == 0): 
-        return final_state.form_A(my_list)
+        return final_state.form_A(len(my_list))
+    else:
+        return final_state.form_B(len(my_list))
 
-my_list = generate_initial_state(4)
-print_list(my_list)
-print("------------------")
-print_list(final_state.generate_spiral_matrix(4))
+size = 4
+my_list = generate_initial_state(size)
+
+print_list(generate_final_state(my_list))

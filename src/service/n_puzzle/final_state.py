@@ -1,5 +1,4 @@
-def form_A(my_list:list):
-    size:int = len(my_list)
+def form_A(size:int):
     matrix = []
     current_number = 1
     for i in range(size):
@@ -13,11 +12,13 @@ def form_A(my_list:list):
         matrix.append(row)
     return matrix
 
-def generate_spiral_matrix(n):
+def form_B(n):
+    # Khởi tạo ma trận n x n với tất cả các phần tử bằng 0
     matrix = [[0] * n for _ in range(n)]
     
+    # Các biến để theo dõi các giới hạn của ma trận
     top, bottom, left, right = 0, n - 1, 0, n - 1
-    num = 1  
+    num = 1  # Giá trị bắt đầu để điền vào ma trận
     
     while top <= bottom and left <= right:
         # Di chuyển từ trái sang phải
@@ -42,12 +43,28 @@ def generate_spiral_matrix(n):
         if left <= right:
             # Di chuyển từ dưới lên trên
             for i in range(bottom, top - 1, -1):
-                # Thay thế số 16 bằng số 0
-                if num == 17:  # Chỉ thay số 16 bằng 0 khi đến lượt điền
-                    matrix[i][left] = 0
-                else:
-                    matrix[i][left] = num
+                matrix[i][left] = num
                 num += 1
             left += 1  # Di chuyển giới hạn bên trái sang phải
             
+    
+    return replace_max_with_zero(matrix)
+
+
+# hàm phụ thôi :v
+def replace_max_with_zero(matrix):
+    max_value = float('-inf')  # Giá trị lớn nhất ban đầu
+    max_position = (0, 0)  # Vị trí của phần tử lớn nhất
+
+    # Duyệt qua từng phần tử trong ma trận
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            # Nếu tìm thấy phần tử lớn hơn, cập nhật giá trị lớn nhất và vị trí
+            if matrix[i][j] > max_value:
+                max_value = matrix[i][j]
+                max_position = (i, j)
+
+    # Thay thế phần tử lớn nhất bằng 0
+    matrix[max_position[0]][max_position[1]] = 0
+    
     return matrix
