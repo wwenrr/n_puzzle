@@ -1,5 +1,12 @@
 import copy
 
+def print_list(my_list):
+    if my_list is None:
+        print("List is None!")
+        return  
+    for i in my_list:
+        print(i)
+
 def is_goal_state(state, goal):
     return state == goal
 
@@ -31,25 +38,53 @@ def get_possible_moves(state:list, moving_rule:str):
     
     return None
 
-def solve_n_puzzle(state, goal, visited=None):
-    if visited is None:
-        visited = set()  # Khởi tạo tập hợp đã duyệt
+def solve_n_puzzle(state, goal):
+    solution_path:list = []
+    queue:list = [state]
+    visited = set()
 
-    state_tuple = tuple(tuple(row) for row in state)  # Chuyển đổi thành tuple để sử dụng làm khóa
-    if state_tuple in visited:
-        return False  # Trả về False nếu trạng thái đã được duyệt
+    moving:list = [
+        "to_up",
+        "to_down",
+        "to_left",
+        "to_right"
+    ]
 
-    visited.add(state_tuple)  # Đánh dấu trạng thái là đã duyệt
+    for i in range(25):
+        if(len(queue) == 0): break
 
-    if state == goal:
-        print("Found solution!")
-        return True  # Trả về True nếu đạt được trạng thái mục tiêu
+        last_element:list = queue[-1]
+        visited.add(tuple(map(tuple, last_element)))
 
-    # Duyệt các hướng di chuyển
-    for direction in ["to_up", "to_down", "to_left", "to_right"]:
-        new_state = get_possible_moves(state, direction)
-        if new_state is not None:  # Nếu có trạng thái hợp lệ
-            if solve_n_puzzle(new_state, goal, visited):
-                return True  # Nếu tìm được giải pháp, trả về True
+        for moving_rule in moving:
+            next_move:list = get_possible_moves(last_element, moving_rule)
 
-    return False
+            if next_move is not None:  
+                next_move_tuple = tuple(map(tuple, next_move))  
+
+                if next_move == goal:
+                    solution_path.append(copy.deepcopy(queue))
+                    solution_path[-1].append(next_move)
+
+                    print("goal:", queue)
+                    break
+
+                if next_move_tuple not in visited:  
+                    queue.append(next_move)
+                    visited.add(tuple(map(tuple, next_move_tuple)))
+                    break
+                else:
+                    print(next_move, "visited")
+                
+        if(queue[-1] == last_element): queue.pop()
+
+        # break
+
+    print("queue: ")
+    if(len(queue)):
+        for i in queue:
+            print_list(i)
+            print("\n")
+    else:
+        print(solution_path)
+    
