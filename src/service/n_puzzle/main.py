@@ -1,7 +1,11 @@
 import random
 from . import final_state
+from . import dfs
 
 def print_list(my_list):
+    if my_list is None:
+        print("List is None!")
+        return  
     for i in my_list:
         print(i)
 
@@ -33,7 +37,37 @@ def generate_final_state(my_list):
     else:
         return final_state.form_B(len(my_list))
 
-size = 4
+size = 3
+
+print("Initial State:")
 my_list = generate_initial_state(size)
 
-print_list(generate_final_state(my_list))
+print_list(my_list)
+print("\n")
+
+if(dfs.solve_n_puzzle(my_list, generate_final_state(my_list))):
+    print("Solution found")
+
+# new_list = dfs.get_possible_moves(my_list, "to_up")
+
+# print_list(new_list)
+
+# print( tuple(map(sum, zip((3, 1), (2, 0)))) )
+
+# size = 3
+
+# print("Initial State:")
+# my_list = generate_initial_state(size)
+# print_list(my_list)
+
+# print("\nGoal State:")
+# goal    = generate_final_state(my_list)
+# print_list(goal)
+
+# solution = dfs.solve_n_puzzle(my_list, goal)
+
+# if solution:
+#     print("\nSolution found:")
+#     print_list(solution)
+# else:
+#     print("No solution found.")

@@ -50,7 +50,6 @@ def form_B(n):
     
     return replace_max_with_zero(matrix)
 
-
 # hàm phụ thôi :v
 def replace_max_with_zero(matrix):
     max_value = float('-inf')  # Giá trị lớn nhất ban đầu
