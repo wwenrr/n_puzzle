@@ -50,7 +50,7 @@ def solve_n_puzzle(state, goal):
         "to_right"
     ]
 
-    for i in range(25):
+    for i in range(500):
         if(len(queue) == 0): break
 
         last_element:list = queue[-1]
@@ -63,6 +63,8 @@ def solve_n_puzzle(state, goal):
                 next_move_tuple = tuple(map(tuple, next_move))  
 
                 if next_move == goal:
+                    print("found")
+
                     solution_path.append(copy.deepcopy(queue))
                     solution_path[-1].append(next_move)
 
@@ -73,18 +75,25 @@ def solve_n_puzzle(state, goal):
                     queue.append(next_move)
                     visited.add(tuple(map(tuple, next_move_tuple)))
                     break
-                else:
-                    print(next_move, "visited")
+                # else:
+                    # print(next_move, "visited ", moving_rule)
                 
-        if(queue[-1] == last_element): queue.pop()
+        if(queue[-1] == last_element):
+            temp = tuple(map(tuple, queue.pop())) 
+            # visited.remove(temp)
 
-        # break
+            print("pop: ", temp)
 
-    print("queue: ")
-    if(len(queue)):
-        for i in queue:
-            print_list(i)
-            print("\n")
-    else:
-        print(solution_path)
+        print(queue)
+        # print(visited)
+
+        # print("queue: ")
+        # if(len(queue)):
+        #     for i in queue:
+        #         print_list(i)
+        #         print("\n")
+
+        print("---------------------------------")
+
+    print("goal: ", solution_path)
     

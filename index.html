@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+</head>
+<body>
+
+    <button id="fetchButton">Fetch API</button>
+    <p id="response"></p>
+
+    <button id="fetchButton_2">Fetch API</button>
+    <p id="response_1"></p>
+
+    <script>
+        const url = "localhost:8080"
+
+        document.getElementById("fetchButton").addEventListener("click", function() {
+            // Gọi API với phương thức POST
+            fetch(`http://${url}/auth/login`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "username": "asdfasdc",
+                    "password": "coinprice123"
+                }),
+                credentials: 'include'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok " + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("response").innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error("Fetch error: ", error);
+                document.getElementById("response").innerText = "Error: " + error;
+            });
+        });
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        // Lấy token từ cookie và gửi trong header
+        const token = getCookie("token"); // Giả sử bạn đã lưu token vào cookie với tên "auth-token"
+
+        document.getElementById("fetchButton_2").addEventListener("click", () => {
+            console.log(token)
+
+            // Gọi API qua HTTP
+            fetch("http://104.214.171.0/api/get-spot-price?symbols=BTCUSDT", {
+                method: "GET",
+                credentials: 'include',  // Thêm tùy chọn này để gửi cookie
+                headers: {
+                    'Content-Type': 'application/json', // Header cho kiểu nội dung
+                },
+                credentials: 'include',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok " + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("response_1").textContent = `Received: ${JSON.stringify(data)}`;
+            })
+            .catch(error => {
+                console.error("Fetch error: ", error);
+                document.getElementById("response_1").textContent = "Error: " + error;
+            });
+        });
+
+    </script>
+
+</body>
+</html>
