@@ -1,15 +1,35 @@
 import copy
 
+# In list ra để debug thôi :v (bỏ cũng đc) vì mù cn nên k biết xài debug tun
 def print_list(my_list):
     if my_list is None:
         print("List is None!")
         return  
     for i in my_list:
-        print(i)
-
+        for j in i:
+            print(j)
+        
+        print("|")
+# Hàm này kiểm tra có phải goal state hay không
 def is_goal_state(state, goal):
+    if(len(state) == 2):
+        return state == [
+            [1, 2],
+            [0, 3]
+        ] or state == [
+            [0, 1],
+            [2, 3]
+        ] or state == [
+            [1, 0],
+            [2, 3]
+        ] or state == [
+            [1, 2],
+            [3, 0]
+        ]
+
     return state == goal
 
+# Hàm này để lấy trạng thái tiếp theo (lên, xuống, trái, phải) của số 0, trả về None nếu không tìm thấy
 def get_possible_moves(state:list, moving_rule:str):
     zero_pos:tuple = [(i, row.index(0)) for i, row in enumerate(state) if 0 in row][0]  # Tìm vị trí của '0'
 
@@ -38,62 +58,92 @@ def get_possible_moves(state:list, moving_rule:str):
     
     return None
 
-def solve_n_puzzle(state, goal):
-    solution_path:list = []
+class dfs:
+    maxdepth:int
+    visited:set = set()
+    solution:list = []
+    maxdepth:int
+    goal:list
+    found:bool
+
+    def __init__(self, queue, goal, maxdepth):
+        self.maxdepth = maxdepth
+        self.visited.add(tuple(tuple(row) for row in queue[-1]))
+        self.goal = goal
+        self.found = False
+
+        self.run(queue, 0)
+
+    def run(self, queue, depth):
+        if(depth == self.maxdepth):
+            return None
+        
+        if(is_goal_state(queue[-1], self.goal)):
+            self.solution.append(copy.deepcopy(queue))
+            print(f"Tim thay solution trong ", len(self.solution[-1]), " buoc")
+            print_list(self.solution[-1])
+            self.found = True
+            return None
+        
+        if(self.found):
+            return None
+        
+        # print_list(queue)
+
+        left = get_possible_moves(queue[-1], "to_left")
+        if(left is not None and not self.found):
+            left_tuple = tuple(tuple(row) for row in left)
+            if(left_tuple not in self.visited):
+                queue.append(left)
+                self.visited.add(left_tuple)
+                self.run(queue, depth+1)
+                self.visited.remove(left_tuple)
+                queue.pop()
+
+        right = get_possible_moves(queue[-1], "to_right")
+        if(right is not None and not self.found):
+            right_tuple = tuple(tuple(row) for row in right)
+            if(right_tuple not in self.visited):
+                queue.append(right)
+                self.visited.add(right_tuple)
+                self.run(queue, depth+1)
+                self.visited.remove(right_tuple)
+                queue.pop()
+
+        up = get_possible_moves(queue[-1], "to_up")
+        if(up is not None and not self.found):
+            up_tuple = tuple(tuple(row) for row in up)
+            if(up_tuple not in self.visited):
+                queue.append(up)
+                self.visited.add(up_tuple)
+                self.run(queue, depth+1)
+                self.visited.remove(up_tuple)
+                queue.pop()
+
+        down = get_possible_moves(queue[-1], "to_down")
+        if(down is not None and not self.found):
+            down_tuple = tuple(tuple(row) for row in down)
+            if(down_tuple not in self.visited):
+                queue.append(down)
+                self.visited.add(down_tuple)
+                self.run(queue, depth+1)
+                self.visited.remove(down_tuple)
+                queue.pop()
+
+        return None
+
+    def public_get_solution(self):
+        return self.solution
+
+# Hàm chính của file này, mấy cái trên là hàm phụ thôi
+def solve_n_puzzle(state, goal, max_depth=50):
     queue:list = [state]
-    visited = set()
 
-    moving:list = [
-        "to_up",
-        "to_down",
-        "to_left",
-        "to_right"
-    ]
+    newClass = dfs(queue, goal, max_depth)
 
-    for i in range(500):
-        if(len(queue) == 0): break
+    output = newClass.public_get_solution()
 
-        last_element:list = queue[-1]
-        visited.add(tuple(map(tuple, last_element)))
+    newClass = None
 
-        for moving_rule in moving:
-            next_move:list = get_possible_moves(last_element, moving_rule)
-
-            if next_move is not None:  
-                next_move_tuple = tuple(map(tuple, next_move))  
-
-                if next_move == goal:
-                    print("found")
-
-                    solution_path.append(copy.deepcopy(queue))
-                    solution_path[-1].append(next_move)
-
-                    print("goal:", queue)
-                    break
-
-                if next_move_tuple not in visited:  
-                    queue.append(next_move)
-                    visited.add(tuple(map(tuple, next_move_tuple)))
-                    break
-                # else:
-                    # print(next_move, "visited ", moving_rule)
-                
-        if(queue[-1] == last_element):
-            temp = tuple(map(tuple, queue.pop())) 
-            # visited.remove(temp)
-
-            print("pop: ", temp)
-
-        print(queue)
-        # print(visited)
-
-        # print("queue: ")
-        # if(len(queue)):
-        #     for i in queue:
-        #         print_list(i)
-        #         print("\n")
-
-        print("---------------------------------")
-
-    print("goal: ", solution_path)
+    return output
     
