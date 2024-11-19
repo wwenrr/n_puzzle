@@ -15,12 +15,25 @@ def print_list(my_list):
     for i in my_list:
         print(i)
 
-def generate_initial_state(k : int):
-    rows = k
+def generate_initial_state(k : int, size = 20):
     numbers = list(range(k * k))
-    random.shuffle(numbers)
-    
-    initial_state = [numbers[i * k:(i + 1) * k] for i in range(k)]
+
+    initial_state = final_state.goal_state(k)
+
+    random_list = random.choices(range(0, 4), k=size)
+
+    moving_rule = [
+        "to_left",
+        "to_right",
+        "to_up",
+        "to_down"
+    ]
+
+    for move in random_list:
+        next_move = dfs.get_possible_moves(initial_state, moving_rule[move])
+        if(next_move is not None):
+            initial_state = next_move
+
     return initial_state
 
 def generate_goal_sum(my_list:list):    
@@ -37,52 +50,22 @@ def generate_goal_sum(my_list:list):
     return sum
 
 def generate_final_state(my_list):
-    if(len(my_list) == 2):
-        return [
-            [
-                [1, 2],
-                [0, 3]
-            ],
-            [
-                [0, 1],
-                [2, 3]
-            ]
-        ] 
-
     mod:int = generate_goal_sum(my_list)
-    return final_state.form_A(len(my_list))
-
-size = 3
-
-# print("Initial State:")
-# # my_list = generate_initial_state(size)
-# my_list = [
-#     [1, 2],
-#     [0, 3]
-# ]
-# print_list(my_list)
-
-# print("goal: ")
-# print_list(generate_final_state(my_list))
-# print("----------------")
-
-
-# if(dfs.solve_n_puzzle(my_list, generate_final_state(my_list))):
-#     print("Solution found")
-# else:
-#     print("Dont found solution")
+    return final_state.goal_state(len(my_list))
 
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--max-depth', type=int, help='Chiều sâu tối đa của thuật toán', required=True)
 parser.add_argument('--size', type=int, help='Kích thước ma trận', required=True)
-
 args = parser.parse_args()
 
-print("Nhap kich thuoc ma tran <n>, chuong trinh se tu dong tao ma tran ngau nhien:")
 try:
+    max_depth = args.max_depth
     size = args.size
-    my_list = generate_initial_state(size)
+    print(f"Doc du lieu tu input:")
+    print("max_depth=",max_depth,", size=",size)
+
+    my_list = generate_initial_state(size, max_depth)
 
     print(f"Tao ma tran ngau nhien: ")
     print_list(my_list)
@@ -90,11 +73,6 @@ try:
     print(f"Tinh toan trang thai dich:")
     goal = generate_final_state(my_list)
     print_list(goal)
-
-    print(f"\nNhap chieu sau toi da cua thuat toan: (Khuyen khich nhap tu n^2 < input < 2*n^2)")
-    print(f"Luu y nhap so nho co the khong tim thay solution, nguoc lai co the doi rat lau!")
-
-    max_depth = args.max_depth
 
     print(f"\nBat dau tim cac ket qua kha thi...")
 
@@ -105,7 +83,6 @@ try:
     else:
         print(f"\nKhong tim thay solution")
 
-    os.system('cls')
 except ValueError:
     print("Thua!")
 

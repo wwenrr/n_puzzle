@@ -1,54 +1,32 @@
-def form_A(size:int):
+def goal_state(size: int):
+    # Create an empty matrix
     matrix = []
+    
+    # Variable 'current_number' is used to fill values from 1 to size*size
     current_number = 1
+    
+    # Loop through all the rows of the matrix
     for i in range(size):
-        row = []
+        row = []  # Create a new row
+        
+        # Loop through all the columns in the current row
         for j in range(size):
-            if current_number == size * size:  # Kiểm tra nếu là số cuối cùng
-                row.append(0)  # Gán số 0 cho phần tử cuối cùng
+            # Check if it's the last number in the matrix (0)
+            if current_number == size * size:
+                row.append(0)  # Assign 0 to the last position (empty space)
             else:
+                # If it's not the last number, assign the next value
                 row.append(current_number)
+            
+            # Increment the number to fill the next position
             current_number += 1
+        
+        # Add the row to the matrix
         matrix.append(row)
+
+    # Return the filled matrix
     return matrix
 
-def form_B(n):
-    # Khởi tạo ma trận n x n với tất cả các phần tử bằng 0
-    matrix = [[0] * n for _ in range(n)]
-    
-    # Các biến để theo dõi các giới hạn của ma trận
-    top, bottom, left, right = 0, n - 1, 0, n - 1
-    num = 1  # Giá trị bắt đầu để điền vào ma trận
-    
-    while top <= bottom and left <= right:
-        # Di chuyển từ trái sang phải
-        for i in range(left, right + 1):
-            matrix[top][i] = num
-            num += 1
-        top += 1  # Di chuyển giới hạn trên xuống
-        
-        # Di chuyển từ trên xuống dưới
-        for i in range(top, bottom + 1):
-            matrix[i][right] = num
-            num += 1
-        right -= 1  # Di chuyển giới hạn bên phải sang trái
-        
-        if top <= bottom:
-            # Di chuyển từ phải sang trái
-            for i in range(right, left - 1, -1):
-                matrix[bottom][i] = num
-                num += 1
-            bottom -= 1  # Di chuyển giới hạn dưới lên
-            
-        if left <= right:
-            # Di chuyển từ dưới lên trên
-            for i in range(bottom, top - 1, -1):
-                matrix[i][left] = num
-                num += 1
-            left += 1  # Di chuyển giới hạn bên trái sang phải
-            
-    
-    return replace_max_with_zero(matrix)
 
 # hàm phụ thôi :v
 def replace_max_with_zero(matrix):

@@ -58,7 +58,7 @@ def get_possible_moves(state:list, moving_rule:str):
     
     return None
 
-class dfs:
+class dfs: 
     maxdepth:int
     visited:set = set()
     solution:list = []

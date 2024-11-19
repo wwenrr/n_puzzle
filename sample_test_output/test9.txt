@@ -1,0 +1,47 @@
+Nhap kich thuoc ma tran <n>, chuong trinh se tu dong tao ma tran ngau nhien:
+Doc du lieu tu input:
+max_depth= 100 , size= 2
+Tao ma tran ngau nhien: 
+[0, 2]
+[1, 3]
+Tinh toan trang thai dich:
+[[1, 2], [0, 3]]
+[[0, 1], [2, 3]]
+
+Bat dau tim cac ket qua kha thi...
+Tim thay solution trong  11  buoc
+[0, 2]
+[1, 3]
+|
+[2, 0]
+[1, 3]
+|
+[2, 3]
+[1, 0]
+|
+[2, 3]
+[0, 1]
+|
+[0, 3]
+[2, 1]
+|
+[3, 0]
+[2, 1]
+|
+[3, 1]
+[2, 0]
+|
+[3, 1]
+[0, 2]
+|
+[0, 1]
+[3, 2]
+|
+[1, 0]
+[3, 2]
+|
+[1, 2]
+[3, 0]
+|
+
+Tim thay 1  ket qua
